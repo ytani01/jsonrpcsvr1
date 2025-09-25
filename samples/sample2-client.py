@@ -87,25 +87,55 @@ def main(ctx, rpccall, server, port, api, debug):
     }
     __log.debug("payload=%s", json.dumps(payload))
 
-    response = requests.post(url, data=json.dumps(payload))
+    try:
+        response = requests.post(url, data=json.dumps(payload))
+        result = response.json()
+        __log.debug("result=%s", result)
 
-    result = response.json()
-    __log.debug("result=%s", result)
+    except requests.exceptions.ConnectionError as _e:
+        __log.error("\n%s:\n %s\n", type(_e).__name__, _e)
+        for _s in str(_e).split(":"):
+            for _s2 in _s.split("("):
+                click.echo(click.style(
+                    f"{_s2.strip()}",
+                    fg="red"
+                ))
+        return
+    except Exception as _e:
+        __log.error("%s: %s", type(_e).__name__, _e)
+        return
 
     try:
-        print(f"{method}{params} > {result["result"]}")
+        click.echo(f"{method}{params} > {result["result"]}")
     except KeyError:
-        err = result['error']
-        __log.debug("error: %s", err)
+        err = {}
 
-        err_message = err['message']
-        print(f"Error: {err_message}")
+        try:
+            err = result['error']
+            __log.debug("error: %s", err)
+        except KeyError:
+            return
+        except Exception as _e2:
+            __log.error("%s: %s", type(_e2).__name__, _e2)
 
-        err_data_errs = err['data']['errors']
-        __log.debug("err_data_errs=%s", err_data_errs)
+        try:
+            err_message = err['message']
+            click.echo(click.style(f"Error: {err_message}", fg="red"))
+        except KeyError:
+            return
+        except Exception as _e2:
+            __log.error("%s: %s", type(_e2).__name__, _e2)
 
-        for e in err_data_errs:
-            print(f"  {e}")
+        try:
+            err_data_errs = err['data']['errors']
+            __log.debug("err_data_errs=%s", err_data_errs)
+
+            for e in err_data_errs:
+                click.echo(click.style(f"  {e}", fg="red"))
+        except KeyError:
+            return
+        except Exception as _e2:
+            __log.error("%s: %s", type(_e2).__name__, _e2)
 
 
 if __name__ == "__main__":
