@@ -9,10 +9,13 @@ from .utils.debug_log_env import get_logger_from_env, set_debug_env
 if __package__:
     __version__ = get_version(__package__)
 else:
-    __version__ = "0.0.0.none"
+    __version__ = "_._._"
+
+ENV_DEBUG = f"DEBUG_{__package__}"
 
 __all__ = [
     "__version__",
+    "ENV_DEBUG",
     "get_logger_from_env",
     "set_debug_env",
 ]
