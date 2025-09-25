@@ -7,6 +7,7 @@ from pyclickutils import click_common_opts, get_logger
 
 VERSION = "0.0.1"
 
+
 @click.command()
 @click.argument("rpccall", nargs=-1)
 @click.option(
@@ -71,7 +72,7 @@ def main(ctx, rpccall, server, port, api, debug):
             if pvalue2:
                 pdata[pkey] = pvalue2
             else:
-                pdata[pkey] = pvalue                
+                pdata[pkey] = pvalue
 
             __log.debug("pdata=%s", pdata)
 

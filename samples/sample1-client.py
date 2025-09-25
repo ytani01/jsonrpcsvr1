@@ -1,7 +1,8 @@
 import requests
 import json
 
-url = "http://localhost:8000/api" # サーバーのURL
+
+url = "http://localhost:8000/api"  # サーバーのURL
 
 payload1 = {
     "jsonrpc": "2.0",
