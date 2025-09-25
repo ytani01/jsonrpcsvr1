@@ -91,18 +91,13 @@ def main(ctx, rpccall, server, port, api, debug):
     #
     # call rpc
     #
-    payload = {
-        "jsonrpc": "2.0",
-        "method": method,
-        "params": pdata,
-        "id": 1,
-    }
-    __log.debug("payload=%s", json.dumps(payload))
+    payload = _mk_jsonrpc_req(method, pdata, 1)
+    __log.debug("payload=%s", _format_json(payload))
 
     try:
         response = requests.post(url, data=json.dumps(payload))
         result = response.json()
-        __log.debug("result=%s", result)
+        __log.debug("result=%s", _format_json(result))
 
     except requests.exceptions.ConnectionError as _e:
         _display_error(_e, __log)
@@ -118,14 +113,43 @@ def main(ctx, rpccall, server, port, api, debug):
         _display_error(result, __log)
 
 
-def _format_json_output(data):
+def _mk_jsonrpc_req(method: str, params: dict, id: int = 1) -> dict:
+    """"Make JSON-RPC request"""
+
+    jsonrpc_req = {
+        "jsonrpc": "2.0",
+        "method": method,
+        "params": params,
+        "id": id,
+    }
+    return jsonrpc_req
+
+
+def _format_json(data):
     """Formats JSON output, attempting to keep simple lists on a single line.
     """
     formatted_str = json.dumps(data, indent=2, ensure_ascii=False)
-    # Regex to reformat lists like [
-    #   "item"
-    # ] to ["item"]
-    formatted_str = re.sub(r'\[\n\s*(".*?")\n\s*\]', r"[\1]", formatted_str)
+
+    # from
+    #      [
+    #         123
+    #      ]
+    # to
+    #      [123]
+    formatted_str = re.sub(r'\[\n\s*(.*?)\n\s*\]', r"[\1]", formatted_str)
+
+    # from
+    #      [
+    #          123,           # 30文字以内
+    #          "a"            # 30文字以内
+    #      ]
+    # to
+    #      [123, "a"]
+    formatted_str = re.sub(
+        r'\[\n\s*(\S{,30})\n\s*(\S{,30})\n\s*\]', r'[\1 \2]',
+        formatted_str
+    )
+
     return formatted_str
 
 
@@ -201,7 +225,7 @@ def _display_error(error_data, logger):
         if "data" in rpc_error:
             click.echo(click.style("  RPC Error Data:", fg="red"))
             click.echo(click.style(
-                _format_json_output(rpc_error["data"]), fg="red"
+                _format_json(rpc_error["data"]), fg="red"
             ))
     elif isinstance(error_data, Exception):
         click.echo(click.style(

@@ -56,3 +56,8 @@ curl -X POST http://127.0.0.1:8000/api \
       "params":{"i":[1,2,3]},"id":1 \
     }'
 ```
+
+
+## Python プログラムによる確認
+
+[samples](samples/) のサンプルプログラムを参照してください。
