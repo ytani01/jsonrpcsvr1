@@ -11,8 +11,7 @@ from pyclickutils import click_common_opts, get_logger
 from jsonrpcsvr1.funcs.calc import sub, sum_int
 from jsonrpcsvr1.funcs.echo import echo
 
-from . import __version__
-from .utils import get_logger_from_env, set_debug_env
+from . import __version__, get_logger_from_env, set_debug_env
 
 METHOD_LIST = [sum_int, sub, echo]
 
@@ -56,7 +55,6 @@ def main(ctx, host, port, reload, debug):
     __log = get_logger(__name__, debug)
     __log.debug("command name=%a", ctx.command.name)
     __log.debug("host=%a, port=%s, reload=%s", host, port, reload)
-
     set_debug_env(debug)
 
     uvicorn.run(f"{__name__}:api", host=host, port=port, reload=True)

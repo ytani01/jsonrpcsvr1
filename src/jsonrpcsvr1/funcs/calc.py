@@ -1,4 +1,4 @@
-from ..utils import get_logger_from_env
+from .. import get_logger_from_env
 
 
 # @ep.method
