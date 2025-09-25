@@ -6,6 +6,7 @@
 .pypirc
 
 .mypy_cache/
+.ruff_cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
