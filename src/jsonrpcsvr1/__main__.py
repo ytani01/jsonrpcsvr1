@@ -1,7 +1,8 @@
 #
 # (c) 2025 Yoichi Tanibayashi
 #
-import fastapi_jsonrpc as jsonrpc
+from contextlib import asynccontextmanager
+import fastapi_jsonrpc as fj
 import uvicorn
 
 from . import __version__
@@ -20,8 +21,22 @@ print(__name__)
 print(__package__)
 print(__version__)
 
-api = jsonrpc.API()  # must be global for uvicorn.run()
-ep = jsonrpc.Entrypoint(ENTRY_POINT_PATH)
+def foo(a, b):
+    print(a, b)
+
+
+@asynccontextmanager
+async def lifespan(app: fj.API):
+    """lifespan"""
+    print("Start up")
+
+    yield
+
+    print("Shutdown")
+
+
+api = fj.API(lifespan=lifespan)  # must be global for uvicorn.run()
+ep = fj.Entrypoint(ENTRY_POINT_PATH)
 
 for _f in METHOD_LIST:
     ep.add_method_route(_f)
