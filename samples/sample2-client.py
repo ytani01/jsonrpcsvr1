@@ -106,7 +106,8 @@ def main(ctx, rpccall, server, port, api, debug):
         return
 
     try:
-        click.echo(f"{method}{params} > {result["result"]}")
+        click.echo(f">> {method}{params}")
+        click.echo(f"<< {result["result"]}")
     except KeyError:
         err = {}
 

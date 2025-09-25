@@ -8,12 +8,12 @@ import fastapi_jsonrpc as fj
 import uvicorn
 from pyclickutils import click_common_opts, get_logger
 
-from jsonrpcsvr1.funcs.calc import sub, sum_int
+from jsonrpcsvr1.funcs.calc import sub, sum_int, add_each
 from jsonrpcsvr1.funcs.echo import echo
 
 from . import __version__, ENV_DEBUG, get_logger_from_env, set_debug_env
 
-METHOD_LIST = [sum_int, sub, echo]
+METHOD_LIST = [sum_int, sub, add_each, echo]
 
 ENTRY_POINT_PATH = "/api"
 DEF_HOST, DEF_PORT = "0.0.0.0", 8000
