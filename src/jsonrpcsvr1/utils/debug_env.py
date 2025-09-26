@@ -3,8 +3,6 @@
 #
 import os
 
-from pyclickutils import get_logger
-
 
 def get_debug_env(env_debug: str) -> bool:
     """get debug env"""

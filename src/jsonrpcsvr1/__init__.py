@@ -3,7 +3,7 @@
 #
 from importlib.metadata import version as get_version
 
-from .utils.debug_log_env import get_debug_env, set_debug_env
+from .utils.debug_env import get_debug_env, set_debug_env
 
 
 if __package__:
