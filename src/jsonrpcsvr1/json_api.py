@@ -8,14 +8,15 @@ from contextlib import asynccontextmanager
 import click
 import fastapi_jsonrpc
 
-from . import ENV_DEBUG, get_logger_from_env
+from pyclickutils import get_logger
+from . import ENV_DEBUG, get_debug_env
 
 
 def _discover_rpc_methods(prefix="rpc_"):
     """Dynamically discovers and returns RPC methods from the funcs directory.
     Only methods whose names start with the given prefix are registered.
     """
-    __log = get_logger_from_env(ENV_DEBUG, __name__)
+    __log = get_logger(__name__, get_debug_env(ENV_DEBUG))
 
     methods = []
     funcs_dir = os.path.join(os.path.dirname(__file__), "funcs")
@@ -43,6 +44,10 @@ def _discover_rpc_methods(prefix="rpc_"):
 @asynccontextmanager
 async def lifespan(api):
     """lifespan"""
+    __log = get_logger(__name__, get_debug_env(ENV_DEBUG))
+    __log.debug(
+        "api=%s.%s", api.__module__, api.__class__.__name__
+    )
 
     class_name = f"{api.__module__}.{api.__class__.__name__}"
 
@@ -56,8 +61,8 @@ async def lifespan(api):
 METHOD_LIST = _discover_rpc_methods(prefix="rpc_")
 ENTRY_POINT_PATH = "/api"
 
-__log = get_logger_from_env(ENV_DEBUG, __name__)
-__log.info("ENV_DEBUG=%a", ENV_DEBUG)
+__log = get_logger(__name__, get_debug_env(ENV_DEBUG))
+__log.debug("ENV_DEBUG=%a", ENV_DEBUG)
 
 
 api = fastapi_jsonrpc.API(lifespan=lifespan)

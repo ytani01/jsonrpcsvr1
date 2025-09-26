@@ -1,18 +1,20 @@
-from .. import ENV_DEBUG, get_logger_from_env
+#
+# (c) 2025 Yoichi Tanibayashi
+#
+from pyclickutils import get_logger
+from .. import ENV_DEBUG, get_debug_env
 
 
-# @ep.method
 async def rpc_sum_int(i: list[int]) -> int:
-    __log = get_logger_from_env(ENV_DEBUG, __name__)
+    __log = get_logger(__name__, get_debug_env(ENV_DEBUG))
     __log.debug("i=%s", i)
 
     return sum(i)
 
 
-# @ep.method
 async def rpc_sub(a: int, b: int) -> int:
     """sub"""
-    __log = get_logger_from_env(ENV_DEBUG, __name__)
+    __log = get_logger(__name__, get_debug_env(ENV_DEBUG))
     __log.debug("a=%s, b=%s", a, b)
 
     return a-b
@@ -20,7 +22,7 @@ async def rpc_sub(a: int, b: int) -> int:
 
 async def rpc_add_each(a: list[int], b: list[int]) -> list[int] | str:
     """Add each number"""
-    __log = get_logger_from_env(ENV_DEBUG, __name__)
+    __log = get_logger(__name__, get_debug_env(ENV_DEBUG))
     __log.debug("a=%s, b=%s", a, b)
 
     try:

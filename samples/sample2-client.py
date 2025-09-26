@@ -5,33 +5,22 @@ import click
 import requests
 from pyclickutils import click_common_opts, get_logger
 
-VERSION = "0.0.1"
+
+VERSION = "0.1.0"
 
 
 @click.command()
 @click.argument("rpccall", nargs=-1)
 @click.option(
-    "--server",
-    "-s",
-    type=str,
-    default="localhost",
-    show_default=True,
+    "--server", "-s", type=str, default="localhost", show_default=True,
     help="server",
 )
 @click.option(
-    "--port",
-    "-p",
-    type=int,
-    default=8000,
-    show_default=True,
+    "--port", "-p", type=int, default=8000, show_default=True,
     help="port number",
 )
 @click.option(
-    "--api",
-    "-a",
-    type=str,
-    default="/api",
-    show_default=True,
+    "--api", "-a", type=str, default="/api", show_default=True,
     help="API path name",
 )
 @click_common_opts(click, VERSION)
@@ -56,7 +45,7 @@ def main(ctx, rpccall, server, port, api, debug):
     params = rpccall[1:]
     __log.debug("method=%a, params=%s", method, params)
 
-    pdata = {}
+    params_data = {}
     pkey_flag = True
     pkey = None
     pvalue = None
@@ -82,16 +71,16 @@ def main(ctx, rpccall, server, port, api, debug):
             __log.debug("pvalue2=%a", pvalue2)
 
             if pvalue2:
-                pdata[pkey] = pvalue2
+                params_data[pkey] = pvalue2
             else:
-                pdata[pkey] = pvalue
+                params_data[pkey] = pvalue
 
-            __log.debug("pdata=%s", pdata)
+            __log.debug("params_data=%s", params_data)
 
     #
     # call rpc
     #
-    payload = _mk_jsonrpc_req(method, pdata, 1)
+    payload = _mk_jsonrpc_req(method, params_data, 1)
     __log.debug("payload=%s", _format_json(payload))
 
     try:
@@ -107,8 +96,8 @@ def main(ctx, rpccall, server, port, api, debug):
         return
 
     try:
-        click.echo(f">> {method}{params}")
-        click.echo(f"<< {result["result"]}")
+        click.echo(f">>> {method}{params}")
+        click.echo(f"<<< {result["result"]}")
     except KeyError:
         _display_error(result, __log)
 

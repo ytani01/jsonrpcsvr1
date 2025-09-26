@@ -3,7 +3,7 @@
 #
 from importlib.metadata import version as get_version
 
-from .utils.debug_log_env import get_logger_from_env, set_debug_env
+from .utils.debug_log_env import get_debug_env, set_debug_env
 
 
 if __package__:
@@ -16,6 +16,6 @@ ENV_DEBUG = f"DEBUG_{__package__}"
 __all__ = [
     "__version__",
     "ENV_DEBUG",
-    "get_logger_from_env",
+    "get_debug_env",
     "set_debug_env",
 ]
